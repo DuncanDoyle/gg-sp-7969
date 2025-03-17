@@ -9,9 +9,6 @@ then
    exit 1
 fi
 
-#----------------------------------------- Install Gloo Gateway with K8S Gateway API support -----------------------------------------
-
-printf "\nApply K8S Gateway CRDs ....\n"
-kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml
+#----------------------------------------- Install Gloo Gateway -----------------------------------------
 
 helm upgrade --install gloo glooe/gloo-ee --namespace gloo-system --create-namespace --set-string license_key=$GLOO_GATEWAY_LICENSE_KEY -f $GLOO_GATEWAY_HELM_VALUES_FILE --version $GLOO_GATEWAY_VERSION
