@@ -1,0 +1,27 @@
+
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: httpbin-child-rt
+  namespace: gloo-system
+spec:
+  routes:
+  - matchers:
+    - prefix: /
+    options:
+      stagedTransformations:
+        inheritTransformation: true
+        early:
+          responseTransforms:
+          - responseTransformation:
+              transformationTemplate:
+                advancedTemplates: true
+                headers:
+                  xyz:
+                    text: no-foo-bar
+                parseBodyBehavior: DontParse
+    routeAction:
+      single:
+        upstream:
+          name: httpbin-httpbin-8000
+          namespace: gloo-system

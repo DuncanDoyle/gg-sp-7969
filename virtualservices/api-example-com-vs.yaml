@@ -1,0 +1,40 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: api-example-com
+  namespace: gloo-system
+  labels:
+    app: httpbin
+spec:
+  virtualHost:
+    domains:
+    - 'api.example.com'
+    options:
+      stagedTransformations:
+        early:
+          requestTransforms:
+          - requestTransformation:
+              transformationTemplate:
+                headers:
+                  foo:
+                    text: bar
+                passthrough: {}
+    routes:
+    - matchers:
+      - prefix: /
+      options:
+        stagedTransformations:
+          inheritTransformation: true
+          early:
+            responseTransforms:
+            - responseTransformation:
+                transformationTemplate:
+                  advancedTemplates: true
+                  headers:
+                    abc:
+                      text: no-foo-bar
+                  parseBodyBehavior: DontParse
+      delegateAction:
+        ref:
+          name: httpbin-child-rt
+          namespace: gloo-system
